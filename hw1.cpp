@@ -40,6 +40,8 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+//#include "structures.cpp"
+#include "setVelocity.cpp"
 
 #define WINDOW_WIDTH  800
 #define WINDOW_HEIGHT 600
@@ -52,8 +54,10 @@ Display *dpy;
 Window win;
 GLXContext glc;
 
-//Structures
 
+
+//Structures
+/*
 struct Vec {
 	float x, y, z;
 };
@@ -68,6 +72,7 @@ struct Particle {
 	Shape s;
 	Vec velocity;
 };
+*/
 
 class Game {
     public:
@@ -78,6 +83,8 @@ class Game {
 		n=0;
 	}
 };
+
+
 
 //Function prototypes
 void initXWindows(void);
@@ -179,6 +186,8 @@ void init_opengl(void)
 
 #define rnd() (float)rand() / (float)RAND_MAX
 
+extern void setVelocity(Particle p);
+
 void makeParticle(Game *game, int x, int y)
 {
 	if (game->n >= MAX_PARTICLES)
@@ -188,8 +197,9 @@ void makeParticle(Game *game, int x, int y)
 	Particle *p = &game->particle[game->n];
 	p->s.center.x = x;
 	p->s.center.y = y;
-	p->velocity.y = rnd() * 1.0 - 0.5;
-	p->velocity.x = rnd() * 2.0 - 1.0;
+//	p->velocity.y = rnd() * 1.0 - 0.5;
+//	p->velocity.x = rnd() * 2.0 - 1.0;
+	setVelocity(p);
 	game->n++;
 }
 
