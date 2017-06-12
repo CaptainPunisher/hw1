@@ -40,7 +40,6 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
-//#include "structures.cpp"
 #include "setVelocity.cpp"
 
 #define WINDOW_WIDTH  800
@@ -54,37 +53,8 @@ Display *dpy;
 Window win;
 GLXContext glc;
 
-
-
 //Structures
-/*
-struct Vec {
-	float x, y, z;
-};
-
-struct Shape {
-	float width, height;
-	float radius;
-	Vec center;
-};
-
-struct Particle {
-	Shape s;
-	Vec velocity;
-};
-
-class Game {
-    public:
-	Shape box;
-	Particle particle[MAX_PARTICLES];
-	int n;
-	Game() {
-		n=0;
-	}
-};
-
-*/
-
+//Moved to structures.h
 
 //Function prototypes
 void initXWindows(void);
@@ -257,6 +227,8 @@ int check_keys(XEvent *e, Game *game)
 	return 0;
 }
 
+const int BOX_OFFSET = 60;
+
 void movement(Game *game)
 {
 	Particle *p;
@@ -271,15 +243,20 @@ void movement(Game *game)
 	
 		//check for collision with shapes...
 		//bounce up
-	
-		Shape *s = &game->box;
-		if (p->s.center.y < s->center.y + s->height && 
-			p->s.center.x < s->center.x + s->width && 
-			p->s.center.x > s->center.x - s->width) 
-		{
-				p->s.center.y = s->center.y + s->height;
+		for (int j=0; j<5; j++) {
+		    Shape *s = &game->box;
+			if (p->s.center.y < s->center.y + s->height + 
+				j * BOX_OFFSET && 
+			p->s.center.x < s->center.x + s->width - 
+				j * BOX_OFFSET && 
+			p->s.center.x > s->center.x - s->width - 
+				j * BOX_OFFSET) 
+			{
+				p->s.center.y = s->center.y + s->height + 
+				    j * BOX_OFFSET;
 				p->velocity.y = -p->velocity.y;
 				p->velocity.y *= .5;
+			}
 		}
 
 		//check for off-screen
@@ -298,17 +275,7 @@ void render(Game *game)
 	//Draw shapes...
 
 	//draw box
-/*	glTranslatef(s->center.x, s->center.y, s->center.z);
-	w = s->width;
-	h = s->height;
-	glBegin(GL_QUADS);
-		glVertex2i(-w,-h);
-		glVertex2i(-w, h);
-		glVertex2i( w, h);
-		glVertex2i( w,-h);
-	glEnd();
-	glPopMatrix();*/
-	for (int i=0; i<5; i++){
+	for (int i=0; i<5; i++) {
 		Shape *s;
 		glColor3ub(0xFF,0,0);
 		s = &game->box;
@@ -318,17 +285,17 @@ void render(Game *game)
 		w = s->width;
 		h = s->height;
 		glBegin(GL_QUADS);
-			glVertex2i(-w - 60*i,-h + 60*i);
-			glVertex2i(-w - 60*i, h + 60*i);
-			glVertex2i( w - 60*i, h + 60*i);
-			glVertex2i( w - 60*i,-h + 60*i);
+			glVertex2i(-w - BOX_OFFSET * i,-h + BOX_OFFSET * i);
+			glVertex2i(-w - BOX_OFFSET * i, h + BOX_OFFSET * i);
+			glVertex2i( w - BOX_OFFSET * i, h + BOX_OFFSET * i);
+			glVertex2i( w - BOX_OFFSET * i,-h + BOX_OFFSET * i);
 		glEnd();
 		glPopMatrix();
 	}
 	//draw all particles here
 	glPushMatrix();
 	glColor3ub(150,160,220);
-	for (int i=0; i<game->n; i++){
+	for (int i=0; i<game->n; i++) {
 		Vec *c = &game->particle[i].s.center;
 		w = 2;
 		h = 2;
