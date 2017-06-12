@@ -72,7 +72,6 @@ struct Particle {
 	Shape s;
 	Vec velocity;
 };
-*/
 
 class Game {
     public:
@@ -84,6 +83,7 @@ class Game {
 	}
 };
 
+*/
 
 
 //Function prototypes
@@ -184,7 +184,7 @@ void init_opengl(void)
 	glClearColor(0.1, 0.1, 0.1, 1.0);
 }
 
-#define rnd() (float)rand() / (float)RAND_MAX
+//#define rnd() = (float)rand() / (float)RAND_MAX
 
 extern void setVelocity(Particle p);
 
@@ -298,11 +298,7 @@ void render(Game *game)
 	//Draw shapes...
 
 	//draw box
-	Shape *s;
-	glColor3ub(0xFF,0,0);
-	s = &game->box;
-	glPushMatrix();
-	glTranslatef(s->center.x, s->center.y, s->center.z);
+/*	glTranslatef(s->center.x, s->center.y, s->center.z);
 	w = s->width;
 	h = s->height;
 	glBegin(GL_QUADS);
@@ -311,8 +307,24 @@ void render(Game *game)
 		glVertex2i( w, h);
 		glVertex2i( w,-h);
 	glEnd();
-	glPopMatrix();
+	glPopMatrix();*/
+	for (int i=0; i<5; i++){
+		Shape *s;
+		glColor3ub(0xFF,0,0);
+		s = &game->box;
+		glPushMatrix();
 
+		glTranslatef(s->center.x, s->center.y, s->center.z);
+		w = s->width;
+		h = s->height;
+		glBegin(GL_QUADS);
+			glVertex2i(-w - 60*i,-h + 60*i);
+			glVertex2i(-w - 60*i, h + 60*i);
+			glVertex2i( w - 60*i, h + 60*i);
+			glVertex2i( w - 60*i,-h + 60*i);
+		glEnd();
+		glPopMatrix();
+	}
 	//draw all particles here
 	glPushMatrix();
 	glColor3ub(150,160,220);
