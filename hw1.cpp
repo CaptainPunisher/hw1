@@ -41,6 +41,7 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "setVelocity.cpp"
+#include "fonts.h"
 
 #define WINDOW_WIDTH  800
 #define WINDOW_HEIGHT 600
@@ -152,6 +153,9 @@ void init_opengl(void)
 	glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, -1, 1);
 	//Set the screen background color
 	glClearColor(0.1, 0.1, 0.1, 1.0);
+	//gluPerspective and gluLookat for 3d and where you're looking ///////
+	glEnable(GL_TEXTURE_2D);
+	initialize_fonts();
 }
 
 //#define rnd() = (float)rand() / (float)RAND_MAX
@@ -291,6 +295,12 @@ void render(Game *game)
 			glVertex2i( w - BOX_OFFSET * i,-h + BOX_OFFSET * i);
 		glEnd();
 		glPopMatrix();
+		unsigned int c = 0x2fff20;
+		Rect r;
+		r.bot =  s->center.y;
+		r.left = s->center.x;
+		r.center = 0;	
+		ggprint8b(&r, 16, c, "W   Walk cycle");
 	}
 	//draw all particles here
 	glPushMatrix();
