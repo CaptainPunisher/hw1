@@ -277,6 +277,12 @@ void render(Game *game)
 	float w, h;
 	glClear(GL_COLOR_BUFFER_BIT);
 	//Draw shapes...
+	
+	////////////////////////////////////////////////////
+	//create box text array here to loop through below
+	////////////////////////////////////////////////////
+	char boxText[5][26] = {"Delivery/Maintenance", "Testing", "Implementation",
+	    "Design", "Requirements"};
 
 	//draw box
 	for (int i=0; i<5; i++) {
@@ -295,12 +301,15 @@ void render(Game *game)
 			glVertex2i( w - BOX_OFFSET * i,-h + BOX_OFFSET * i);
 		glEnd();
 		glPopMatrix();
-		unsigned int c = 0x2fff20;
+		//colot for text in boxes
+		unsigned int c = 0x66cccc;
 		Rect r;
-		r.bot =  s->center.y;
-		r.left = s->center.x;
+		r.bot =  s->center.y + BOX_OFFSET * i - 5;
+		r.left = s->center.x - BOX_OFFSET * i - 70;
 		r.center = 0;	
-		ggprint8b(&r, 16, c, "W   Walk cycle");
+		//folowing line works
+		//ggprint8b(&r, 16, c, "W   Walk cycle");
+		ggprint8b(&r, 16, c, boxText[i]);
 	}
 	//draw all particles here
 	glPushMatrix();
